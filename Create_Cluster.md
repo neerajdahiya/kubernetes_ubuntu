@@ -39,6 +39,7 @@
 
 # Install Docker
 - Refer https://docs.docker.com/engine/install/ubuntu/ for official documentation. Install using the convenience script can be also opted (not covered here).
+**- Execute "Install Docker" steps on all hosts / VMs that are planned to be added to cluster**
 
 ### Uninstall old versions
 > sudo apt-get remove docker docker-engine docker.io containerd runc
@@ -60,6 +61,8 @@
 > sudo apt-get install docker-ce docker-ce-cli containerd.io
 
 ### Verify that Docker Engine is installed correctly
+> sudo docker version
+
 > sudo docker run hello-world
 
 ### (Optional) Manage Docker via non-root user
@@ -74,9 +77,37 @@
 - Log out and log back in so that your group membership is re-evaluated.
 
 #### Verify that you can run docker commands without sudo
+> docker version
+
 > docker run hello-world
 
 
 # Install Kubernetes
-- Refer  for official documentation.
+- Refer below links for official documentation.
+  - https://kubernetes.io/docs/setup/production-environment/			-- Provides background
+  - https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ 	-- Installation steps using kubeadm
+  - https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
 
+### Disable swap
+> sudo sed -i '/swap/d' /etc/fstab
+
+> sudo swapoff -a
+
+### Verify MAC and product_uuid uniqueness
+> ifconfig -a
+- execute on all cluster nodes, check mac address of enp0 interface (assuming only one network adapter is enabled for VM). Validate all have different MAC
+
+> sudo cat /sys/class/dmi/id/product_uuid
+- execute on all cluster nodes, validate that all VMs have different id
+
+### iptables see bridged traffic
+> cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+> br_netfilter
+> EOF
+
+> cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+> net.bridge.bridge-nf-call-ip6tables = 1
+> net.bridge.bridge-nf-call-iptables = 1
+> EOF
+
+> sudo sysctl --system
