@@ -10,6 +10,9 @@
 - ***Use 'Bridged Adapter' under Network options for all VMs. This would allow external DHCP server (ex: router on LAN) to assign IPs to Virtual Machine. Additionally HOST can also be used to deploy applications outside cluster (scenarios like CICD can easily be tested with this setup if HOST has limited resources)***
 - ***Create VM snapshot immediately after clean OS install, this can act as base for clone in case there is need to spawn new VMs (to avoid OS installation steps)***
 
+## Install net-tools
+*Required to check interface ip and mac*
+> sudo apt install net-tools
 
 ## Enable SSH on all Virtual Machines
 *Required to be completed by logging in to individual Virtual Machines*
@@ -27,4 +30,11 @@
 ### Restart ssh service
 > sudo systemctl restart sshd.service
 
+## (Optional) Enable FTP server
+*FTP can be enabled on VMs in case file transfer is required between Host -- Guest / Guest -- Guest.*
+
+### Install FTP server
+> sudo apt install vsftpd
+
+## Install Docker
 
