@@ -1,6 +1,6 @@
 ## Create VMs
 
-**Using Virtualbox UI create 3 VMs.**
+**Using Virtualbox to create 3 VMs.**
 
 **Some useful tips:**
 - *Ensure to provide sufficient storage to each VM*
@@ -37,4 +37,21 @@
 > sudo apt install vsftpd
 
 ## Install Docker
+- Refer https://docs.docker.com/engine/install/ubuntu/ for official documentation
+
+### Uninstall old versions
+>  sudo apt-get remove docker docker-engine docker.io containerd runc
+
+### Update the apt package index and install packages to allow apt to use a repository over HTTPS
+>   sudo apt-get update
+>   sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+
+### Add Docker’s official GPG key
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
 
