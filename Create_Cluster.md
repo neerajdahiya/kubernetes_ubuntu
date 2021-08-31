@@ -12,13 +12,13 @@
 
 ## Install net-tools
 *Required to check interface ip and mac*
-> sudo apt install net-tools
+```sudo apt install net-tools```
 
 ## Enable SSH on all Virtual Machines
 *Required to be completed by logging in to individual Virtual Machines*
 
 ### Install SSH server
-> sudo apt install openssh-server
+```sudo apt install openssh-server```
 
 - **Use ssh from host computer to connect to all machines and execute steps in next points.**
 	-This is quite important as if each machine is configured via local terminal then it would be lot of manual overhead (as can't copy data between machines). Also worker node addition would require master node kubeadm command to be executed on all machines.
@@ -29,13 +29,13 @@
    	- uncomment PasswordAuthentication yes
    ```
 ### Restart ssh service
-> sudo systemctl restart sshd.service
+```sudo systemctl restart sshd.service```
 
 ## (Optional) Enable FTP server
 *FTP can be enabled on VMs in case file transfer is required between Host -- Guest / Guest -- Guest.*
 
 ### Install FTP server
-> sudo apt install vsftpd
+```sudo apt install vsftpd```
 
 
 # Install Docker
@@ -43,7 +43,7 @@
 **- Execute "Install Docker" steps on all hosts / VMs that are planned to be added to cluster**
 
 ### Uninstall old versions
-> sudo apt-get remove docker docker-engine docker.io containerd runc
+```sudo apt-get remove docker docker-engine docker.io containerd runc```
 
 ### Update the apt package index and install packages to allow apt to use a repository over HTTPS
 ```
@@ -97,10 +97,9 @@ docker run hello-world
 ```
 
 # Install Kubernetes
-- Refer below links for official documentation.
-  - https://kubernetes.io/docs/setup/production-environment/			-- Provides background
-  - https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ 	-- Installation steps using kubeadm
-  - https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+**- Execute below procedures on master node only unless specified otherwise**
+- Start here https://kubernetes.io/docs/setup/production-environment/ for official documentation.
+- Installing kubeadm https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/ 
 
 ### Disable swap
 ```
@@ -109,6 +108,7 @@ sudo swapoff -a
 ```
 
 ### Verify MAC and product_uuid uniqueness
+- from all nodes in cluster
 ```
 ifconfig -a
 	- execute on all cluster nodes, check mac address of enp0 interface (assuming only one network adapter is enabled for VM). Validate all have different MAC
@@ -116,7 +116,7 @@ ifconfig -a
 sudo cat /sys/class/dmi/id/product_uuid
 	- execute on all cluster nodes, validate that all VMs have different id
 ```
-### iptables see bridged traffic
+### Let iptables see bridged traffic
   ```
   cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
   br_netfilter
@@ -129,4 +129,67 @@ sudo cat /sys/class/dmi/id/product_uuid
 
   sudo sysctl --system
   ```
-### Text
+## Installing kubeadm, kubelet and kubectl
+
+### Update the apt package index and install packages needed to use the Kubernetes apt repository
+```
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl
+```
+
+### Download google public key
+```sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg```
+
+### Add the Kubernetes apt repository
+```
+echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+```
+
+### Update apt package index, install kubelet, kubeadm and kubectl, and pin their version
+```
+sudo apt-get update
+sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+```
+
+## Creating a cluster with kubeadm
+- Official documentation page https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+
+### Initializing control-plane node
+```
+#kubeadm init <args>
+kubeadm init --pod-network-cidr=192.168.200.0/23 --ignore-preflight-errors=NumCPU
+
+- Refer offical documentation page for various argument details.
+```
+### Setup kubeconfig on master node
+**- Execute as non-root user** 
+```
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+### Install POD network add on
+- Calico is being used as network provider.
+
+#### Download Calico YAML file
+``` curl https://docs.projectcalico.org/manifests/calico.yaml -o```
+
+#### Find CALICO_IPV4POOL_CIDR variable in yaml file and replace value with subnet used during kubeadm init command
+```
+vi calico.yaml
+	- find name: CALICO_IPV4POOL_CIDR and update its value attribute to 192.168.200.0/23
+		- name: CALICO_IPV4POOL_CIDR
+		  value: 192.168.200.0/23
+```
+
+#### Install Calico in cluster
+``` kubectl apply -f calico.yaml```
+
+#### Verify cluster state
+```kubectl get nodes```
+- worker are yet to be added so output will show master node.
+
+### Add Worker Nodes
+- Execute the command shown in kubeadm init output on each worker node as root
+``` kubeadm join <control-plane-host>:<control-plane-port> --token <token> --discovery-token-ca-cert-hash sha256:<hash>```
