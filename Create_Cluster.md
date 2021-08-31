@@ -1,4 +1,4 @@
-## Create VMs
+# Create VMs
 
 **Using Virtualbox to create 3 VMs.**
 
@@ -25,7 +25,7 @@
 
 ### Enable Password Authentication
 > vi sshd_config
->   -	uncomment PasswordAuthentication yes
+> 	- uncomment PasswordAuthentication yes
 
 ### Restart ssh service
 > sudo systemctl restart sshd.service
@@ -37,17 +37,18 @@
 > sudo apt install vsftpd
 
 
-## Install Docker
+# Install Docker
 - Refer https://docs.docker.com/engine/install/ubuntu/ for official documentation
 
 ### Uninstall old versions
->  sudo apt-get remove docker docker-engine docker.io containerd runc
+> sudo apt-get remove docker docker-engine docker.io containerd runc
 
 ### Update the apt package index and install packages to allow apt to use a repository over HTTPS
->   sudo apt-get update
->   sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
+> sudo apt-get update
+> sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
 
 ### Add Docker’s official GPG key
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+> curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
+### Set up the stable repository
 
