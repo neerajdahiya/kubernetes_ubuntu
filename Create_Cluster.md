@@ -167,7 +167,7 @@ kubeadm init --pod-network-cidr=192.168.200.0/23 --ignore-preflight-errors=NumCP
 - Refer offical documentation page for various argument details.
 ```
 ### Setup kubeconfig on master node
-**- Execute as non-root user** 
+- Execute as non-root user
 ```
   mkdir -p $HOME/.kube
   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
