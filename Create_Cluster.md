@@ -84,11 +84,13 @@ sudo docker run hello-world
 - Execute procedure from non-root user
 
 #### Create Docker group
-> sudo groupadd docker
+```sudo groupadd docker```
 
 #### Add your user to the docker group
-> sudo usermod -aG docker $USER
+```
+sudo usermod -aG docker $USER
 - Log out and log back in so that your group membership is re-evaluated.
+```
 
 #### Verify that you can run docker commands without sudo
 ```
