@@ -24,9 +24,10 @@
 	-This is quite important as if each machine is configured via local terminal then it would be lot of manual overhead (as can't copy data between machines). Also worker node addition would require master node kubeadm command to be executed on all machines.
 
 ### Enable Password Authentication
-> vi sshd_config
-> 	- uncomment PasswordAuthentication yes
-
+   ```
+   vi sshd_config
+   	- uncomment PasswordAuthentication yes
+   ```
 ### Restart ssh service
 > sudo systemctl restart sshd.service
 
@@ -45,25 +46,38 @@
 > sudo apt-get remove docker docker-engine docker.io containerd runc
 
 ### Update the apt package index and install packages to allow apt to use a repository over HTTPS
-> sudo apt-get update
+```
+ sudo apt-get update
 
-> sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
+ sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+```
 
 ### Add Docker’s official GPG key
 > curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
 ### Set up the stable repository
-> echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+echo \
+  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
 
 ### Update the apt package index, and install the latest version of Docker Engine and containerd
-> sudo apt-get update
-
-> sudo apt-get install docker-ce docker-ce-cli containerd.io
+```
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+```
 
 ### Verify that Docker Engine is installed correctly
-> sudo docker version
-
-> sudo docker run hello-world
+```
+sudo docker version
+sudo docker run hello-world
+```
 
 ### (Optional) Manage Docker via non-root user
 - Offical documentation at https://docs.docker.com/engine/install/linux-postinstall/
@@ -77,10 +91,10 @@
 - Log out and log back in so that your group membership is re-evaluated.
 
 #### Verify that you can run docker commands without sudo
-> docker version
-
-> docker run hello-world
-
+```
+docker version
+docker run hello-world
+```
 
 # Install Kubernetes
 - Refer below links for official documentation.
@@ -89,17 +103,19 @@
   - https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
 
 ### Disable swap
-> sudo sed -i '/swap/d' /etc/fstab
-
-> sudo swapoff -a
+```
+sudo sed -i '/swap/d' /etc/fstab
+sudo swapoff -a
+```
 
 ### Verify MAC and product_uuid uniqueness
-> ifconfig -a
-- execute on all cluster nodes, check mac address of enp0 interface (assuming only one network adapter is enabled for VM). Validate all have different MAC
+```
+ifconfig -a
+	- execute on all cluster nodes, check mac address of enp0 interface (assuming only one network adapter is enabled for VM). Validate all have different MAC
 
-> sudo cat /sys/class/dmi/id/product_uuid
-- execute on all cluster nodes, validate that all VMs have different id
-
+sudo cat /sys/class/dmi/id/product_uuid
+	- execute on all cluster nodes, validate that all VMs have different id
+```
 ### iptables see bridged traffic
   ```
   cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
