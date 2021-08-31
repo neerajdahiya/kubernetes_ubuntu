@@ -192,4 +192,5 @@ vi calico.yaml
 
 ### Add Worker Nodes
 - Execute the command shown in kubeadm init output on each worker node as root
+
 ``` kubeadm join <control-plane-host>:<control-plane-port> --token <token> --discovery-token-ca-cert-hash sha256:<hash>```
