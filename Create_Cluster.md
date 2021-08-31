@@ -38,7 +38,7 @@
 
 
 # Install Docker
-- Refer https://docs.docker.com/engine/install/ubuntu/ for official documentation. Install using the convenience script option can be also opted (not covered in this file).
+- Refer https://docs.docker.com/engine/install/ubuntu/ for official documentation. Install using the convenience script can be also opted (not covered here).
 
 ### Uninstall old versions
 > sudo apt-get remove docker docker-engine docker.io containerd runc
@@ -76,4 +76,7 @@
 #### Verify that you can run docker commands without sudo
 > docker run hello-world
 
+
+# Install Kubernetes
+- Refer  for official documentation.
 
