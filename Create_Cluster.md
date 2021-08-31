@@ -12,22 +12,24 @@
 
 ## Install net-tools
 *Required to check interface ip and mac*
+
 ```sudo apt install net-tools```
 
 ## Enable SSH on all Virtual Machines
 *Required to be completed by logging in to individual Virtual Machines*
 
 ### Install SSH server
+
 ```sudo apt install openssh-server```
 
 - **Use ssh from host computer to connect to all machines and execute steps in next points.**
 	-This is quite important as if each machine is configured via local terminal then it would be lot of manual overhead (as can't copy data between machines). Also worker node addition would require master node kubeadm command to be executed on all machines.
 
 ### Enable Password Authentication
-   ```
-   vi sshd_config
-   	- uncomment PasswordAuthentication yes
-   ```
+```
+vi sshd_config
+	- uncomment PasswordAuthentication yes
+```
 ### Restart ssh service
 ```sudo systemctl restart sshd.service```
 
