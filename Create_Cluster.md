@@ -1,4 +1,4 @@
-## Create VM in Virtual box
+## Create VMs
 
 **Using Virtualbox UI create 3 VMs.**
 
@@ -8,9 +8,11 @@
 - *Name VMs so that it can be easily identified in Virtualbox UI. Like master01_cluster01, worker01_cluster01, etc.*
 - *Provide username such that you can easily identify master / worker nodes. Ex: for master01_cluster01 VM give username as master01, and for worker01_cluster01 as worker01*
 - ***Use 'Bridged Adapter' under Network options for all VMs. This would allow external DHCP server (ex: router on LAN) to assign IPs to Virtual Machine. Additionally HOST can also be used to deploy applications outside cluster (scenarios like CICD can easily be tested with this setup if HOST has limited resources)***
+- ***Create VM snapshot immediately after clean OS install, this can act as base for clone in case there is need to spawn new VMs (to avoid OS installation steps)***
 
 
 ## Enable SSH on all Virtual Machines
+*Required to be completed by logging in to individual Virtual Machines*
 
 ### Install SSH server
 > sudo apt install openssh-server
@@ -21,3 +23,8 @@
 ### Enable Password Authentication
 > vi sshd_config
 >   -	uncomment PasswordAuthentication yes
+
+### Restart ssh service
+> sudo systemctl restart sshd.service
+
+
