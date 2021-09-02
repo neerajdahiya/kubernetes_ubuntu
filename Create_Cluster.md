@@ -222,7 +222,7 @@ sudo kubeadm init --pod-network-cidr=192.168.200.0/23 --ignore-preflight-errors=
 
 #### Download Calico YAML file
 ```
-curl https://docs.projectcalico.org/manifests/calico.yaml -o
+curl https://docs.projectcalico.org/manifests/calico.yaml -O
 ```
 
 #### Find CALICO_IPV4POOL_CIDR variable in yaml file and replace value with subnet used during kubeadm init command
