@@ -34,8 +34,9 @@ sudo apt install openssh-server
 ### Enable Password Authentication
 ```
 vi sshd_config
-	- uncomment PasswordAuthentication yes
 ```
+- uncomment PasswordAuthentication yes
+
 ### Restart ssh service
 ```
 sudo systemctl restart sshd.service
@@ -107,8 +108,8 @@ sudo groupadd docker
 #### Add your user to the docker group
 ```
 sudo usermod -aG docker $USER
-- Log out and log back in so that your group membership is re-evaluated.
 ```
+- Log out and log back in so that your group membership is re-evaluated.
 
 #### Verify that you can run docker commands without sudo
 ```
