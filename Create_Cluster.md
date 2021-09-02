@@ -117,12 +117,14 @@ docker version
 docker run hello-world
 ```
 
+
 # Install Kubernetes
 **- Execute below procedures on master node only unless specified otherwise**
 - Start here https://kubernetes.io/docs/setup/production-environment/ for official documentation.
 - Installing kubeadm https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/ 
 
 ### Disable swap
+- **Execute on all cluster VMs/nodes**
 ```
 sudo sed -i '/swap/d' /etc/fstab
 sudo swapoff -a
