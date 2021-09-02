@@ -177,6 +177,29 @@ sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 ```
 
+## Configuring cgroup driver
+- ***Matching the container runtime and kubelet cgroup drivers is required or otherwise the kubelet process will fail (resulting in kubeadm init failure).***
+- Configure the Docker daemon, in particular to use systemd for the management of the container’s cgroups.
+```
+sudo mkdir /etc/docker
+cat <<EOF | sudo tee /etc/docker/daemon.json
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+```
+- Restart docker and enable on boot
+```
+sudo systemctl enable docker
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
 ## Creating a cluster with kubeadm
 - Official documentation page https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
 
