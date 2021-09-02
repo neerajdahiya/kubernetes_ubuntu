@@ -15,14 +15,18 @@
 ## Install net-tools
 *Required to check interface ip and mac*
 
-```sudo apt install net-tools```
+```
+sudo apt install net-tools
+```
 
 ## Enable SSH on all Virtual Machines
 *Should be enabled for all VMs of cluster so that CLI can be accessed directly from HOST and login to individual VMs is not required. If not done then all CLI commands need to be completed by logging in to individual Virtual Machines*
 
 ### Install SSH server
 
-```sudo apt install openssh-server```
+```
+sudo apt install openssh-server
+```
 
 - **Use ssh from host computer to connect to all machines and execute steps in next points.**
 	-This is quite important as if each machine is configured via local terminal then it would be lot of manual overhead (as can't copy data between machines). Also worker node addition would require master node kubeadm command to be executed on all machines.
@@ -33,13 +37,17 @@ vi sshd_config
 	- uncomment PasswordAuthentication yes
 ```
 ### Restart ssh service
-```sudo systemctl restart sshd.service```
+```
+sudo systemctl restart sshd.service
+```
 
 ## (Optional) Enable FTP server
 *FTP can be enabled on VMs in case file transfer is required between Host -- Guest / Guest -- Guest.*
 
 ### Install FTP server
-```sudo apt install vsftpd```
+```
+sudo apt install vsftpd
+```
 
 
 # Install Docker
@@ -47,7 +55,9 @@ vi sshd_config
 **- Execute "Install Docker" steps on all hosts / VMs that are planned to be added to cluster**
 
 ### Uninstall old versions
-```sudo apt-get remove docker docker-engine docker.io containerd runc```
+```
+sudo apt-get remove docker docker-engine docker.io containerd runc
+```
 
 ### Update the apt package index and install packages to allow apt to use a repository over HTTPS
 ```
@@ -90,7 +100,9 @@ sudo docker run hello-world
 - Execute procedure from non-root user
 
 #### Create Docker group
-```sudo groupadd docker```
+```
+sudo groupadd docker
+```
 
 #### Add your user to the docker group
 ```
@@ -146,7 +158,9 @@ sudo apt-get install -y apt-transport-https ca-certificates curl
 ```
 
 ### Download google public key
-```sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg```
+```
+sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+```
 
 ### Add the Kubernetes apt repository
 ```
@@ -167,9 +181,9 @@ sudo apt-mark hold kubelet kubeadm kubectl
 ```
 #kubeadm init <args>
 kubeadm init --pod-network-cidr=192.168.200.0/23 --ignore-preflight-errors=NumCPU
-
-- Refer offical documentation page for various argument details.
 ```
+- Refer offical documentation page for various argument details.
+
 ### Setup kubeconfig on master node
 - Execute as non-root user
 ```
@@ -181,24 +195,33 @@ kubeadm init --pod-network-cidr=192.168.200.0/23 --ignore-preflight-errors=NumCP
 - Calico is being used as network provider.
 
 #### Download Calico YAML file
-``` curl https://docs.projectcalico.org/manifests/calico.yaml -o```
+```
+curl https://docs.projectcalico.org/manifests/calico.yaml -o
+```
 
 #### Find CALICO_IPV4POOL_CIDR variable in yaml file and replace value with subnet used during kubeadm init command
 ```
 vi calico.yaml
-	- find name: CALICO_IPV4POOL_CIDR and update its value attribute to 192.168.200.0/23
-		- name: CALICO_IPV4POOL_CIDR
-		  value: 192.168.200.0/23
+	
+#	- find name: CALICO_IPV4POOL_CIDR and update its value attribute to #192.168.200.0/23
+#		- name: CALICO_IPV4POOL_CIDR
+#		  value: 192.168.200.0/23
 ```
 
 #### Install Calico in cluster
-``` kubectl apply -f calico.yaml```
+```
+kubectl apply -f calico.yaml
+```
 
 #### Verify cluster state
-```kubectl get nodes```
+```
+kubectl get nodes
+```
 - worker are yet to be added so output will show master node.
 
 ### Add Worker Nodes
 - Execute the command shown in kubeadm init output on each worker node as root
 
-``` kubeadm join <control-plane-host>:<control-plane-port> --token <token> --discovery-token-ca-cert-hash sha256:<hash>```
+```
+#kubeadm join <control-plane-host>:<control-plane-port> --token <token> --discovery-token-ca-cert-hash sha256:<hash>
+```
