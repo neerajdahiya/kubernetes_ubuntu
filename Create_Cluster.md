@@ -132,11 +132,13 @@ sudo swapoff -a
 - from all nodes in cluster
 ```
 ifconfig -a
-	- execute on all cluster nodes, check mac address of enp0 interface (assuming only one network adapter is enabled for VM). Validate all have different MAC
-
-sudo cat /sys/class/dmi/id/product_uuid
-	- execute on all cluster nodes, validate that all VMs have different id
 ```
+- execute on all cluster nodes, check mac address of enp0 interface (assuming only one network adapter is enabled for VM). Validate all have different MAC
+```
+sudo cat /sys/class/dmi/id/product_uuid
+```
+- execute on all cluster nodes, validate that all VMs have different id
+
 ### Let iptables see bridged traffic
   ```
   cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
