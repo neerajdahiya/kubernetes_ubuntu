@@ -18,7 +18,7 @@
 ```sudo apt install net-tools```
 
 ## Enable SSH on all Virtual Machines
-*Required to be completed by logging in to individual Virtual Machines*
+*Should be enabled for all VMs of cluster so that CLI can be accessed directly from HOST and login to individual VMs is not required. If not done then all CLI commands need to be completed by logging in to individual Virtual Machines*
 
 ### Install SSH server
 
