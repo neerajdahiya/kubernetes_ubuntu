@@ -223,6 +223,7 @@ sudo kubeadm init --apiserver-advertise-address=192.168.1.1 --pod-network-cidr=1
 ```
 ### Install POD network add on
 - Calico is being used as network provider.
+- **Execute Calico procedures as non-root user without sudo**
 
 #### Download Calico YAML file
 ```
