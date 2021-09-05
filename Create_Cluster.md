@@ -207,10 +207,10 @@ sudo systemctl restart docker
 - Official documentation page https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
 
 ### Initializing control-plane node
-```
-#kubeadm init <args>
-sudo kubeadm init --apiserver-advertise-address=192.168.1.1 --pod-network-cidr=192.168.200.0/23 --ignore-preflight-errors=NumCPU
+#####kubeadm init <args>
 - api server address to be used as IP assigned to master node
+```
+sudo kubeadm init --apiserver-advertise-address=192.168.1.1 --pod-network-cidr=192.168.200.0/23 --ignore-preflight-errors=NumCPU
 ```
 - Refer offical documentation page for various argument details.
 
