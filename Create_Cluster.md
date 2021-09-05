@@ -8,6 +8,7 @@
 - *Name VMs so that it can be easily identified in Virtualbox UI. Like master01_cluster01, worker01_cluster01, etc.*
 - *Provide username such that you can easily identify master / worker nodes. Ex: for master01_cluster01 VM give username as master01, and for worker01_cluster01 as worker01*
 - ***Use 'Bridged Adapter' under Network options for all VMs. This would allow external DHCP server (ex: router on LAN) to assign IPs to Virtual Machine. Additionally HOST can also be used to deploy applications outside cluster (scenarios like CICD can easily be tested with this setup if HOST has limited resources)***
+- *Bridged networking requires that IP MAC binding is done in DHCP server on network.* 
 ![image](https://user-images.githubusercontent.com/49958913/131646031-bfe32915-4ad4-496c-acd3-0fffdc18ed4d.png)
 
 - ***Create VM snapshot immediately after clean OS install, this can act as base for clone in case there is need to spawn new VMs (to avoid OS installation steps)***
