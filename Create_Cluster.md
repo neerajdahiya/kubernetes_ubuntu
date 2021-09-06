@@ -119,8 +119,7 @@ docker run hello-world
 ```
 
 
-# Install Kubernetes
-**- Execute below procedures on master node only unless specified otherwise**
+# Install Kubernetes (Procedure on Master and Worker nodes)
 - Start here https://kubernetes.io/docs/setup/production-environment/ for official documentation.
 - Installing kubeadm https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/ 
 
@@ -132,17 +131,19 @@ sudo swapoff -a
 ```
 
 ### Verify MAC and product_uuid uniqueness
-- from all nodes in cluster
+
 ```
 ifconfig -a
 ```
 - execute on all cluster nodes, check mac address of enp0 interface (assuming only one network adapter is enabled for VM). Validate all have different MAC
+
 ```
 sudo cat /sys/class/dmi/id/product_uuid
 ```
 - execute on all cluster nodes, validate that all VMs have different id
 
 ### Let iptables see bridged traffic
+
   ```
   cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
   br_netfilter
@@ -155,9 +156,11 @@ sudo cat /sys/class/dmi/id/product_uuid
 
   sudo sysctl --system
   ```
+
 ## Installing kubeadm, kubelet and kubectl
 
 ### Update the apt package index and install packages needed to use the Kubernetes apt repository
+
 ```
 sudo apt-get update
 sudo apt-get install -y apt-transport-https ca-certificates curl
@@ -203,10 +206,11 @@ sudo systemctl daemon-reload
 sudo systemctl restart docker
 ```
 
-## Creating a cluster with kubeadm
+## Creating a cluster with kubeadm (Only Master Node procedure)
 - Official documentation page https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
 
 ### Initializing control-plane node
+
 #####kubeadm init <args>
 - api server address to be used as IP assigned to master node
 ```
@@ -224,6 +228,14 @@ sudo kubeadm init --apiserver-advertise-address=192.168.1.1 --pod-network-cidr=1
 ### Install POD network add on
 - Calico is being used as network provider.
 - **Execute Calico procedures as non-root user without sudo**
+
+#### Configure NetworkManager before using Calico networking
+```
+vi /etc/NetworkManager/conf.d/calico.conf
+```
+- add below definition in calico.conf
+[keyfile]
+unmanaged-devices=interface-name:cali*;interface-name:tunl*;interface-name:vxlan.calico
 
 #### Download Calico YAML file
 ```
@@ -250,9 +262,14 @@ kubectl get nodes
 ```
 - worker are yet to be added so output will show master node.
 
+## Joining a cluster with kubeadm (Only Worker Node procedure)
 ### Add Worker Nodes
 - Execute the command shown in kubeadm init output on each worker node as root
 
 ```
 #kubeadm join <control-plane-host>:<control-plane-port> --token <token> --discovery-token-ca-cert-hash sha256:<hash>
+```
+#### Verify cluster state
+```
+kubectl get nodes
 ```
