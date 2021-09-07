@@ -225,11 +225,12 @@ sudo kubeadm init --apiserver-advertise-address=192.168.1.1 --pod-network-cidr=1
   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
   sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
+
 ### Install POD network add on
 - Calico is being used as network provider.
 - **Execute Calico procedures as non-root user without sudo**
 
-#### Configure NetworkManager before using Calico networking
+#### Configure NetworkManager before using Calico networking (In my case there was failure in calico kubectl apply before these changes, using bridged networking for VMs in my cluster setup)
 ```
 vi /etc/NetworkManager/conf.d/calico.conf
 ```
