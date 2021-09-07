@@ -144,18 +144,18 @@ sudo cat /sys/class/dmi/id/product_uuid
 
 ### Let iptables see bridged traffic
 
-  ```
-  cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
-  br_netfilter
-  EOF
+```
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+br_netfilter
+EOF
 
-  cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
-  net.bridge.bridge-nf-call-ip6tables = 1
-  net.bridge.bridge-nf-call-iptables = 1
-  EOF
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
 
-  sudo sysctl --system
-  ```
+sudo sysctl --system
+```
 
 ## Installing kubeadm, kubelet and kubectl
 
@@ -211,7 +211,7 @@ sudo systemctl restart docker
 
 ### Initializing control-plane node
 
-#####kubeadm init <args>
+#####kubeadm init args
 - api server address to be used as IP assigned to master node
 ```
 sudo kubeadm init --apiserver-advertise-address=192.168.1.1 --pod-network-cidr=192.168.200.0/23 --ignore-preflight-errors=NumCPU
@@ -221,9 +221,9 @@ sudo kubeadm init --apiserver-advertise-address=192.168.1.1 --pod-network-cidr=1
 ### Setup kubeconfig on master node
 - Execute as non-root user
 ```
-  mkdir -p $HOME/.kube
-  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
 ### Install POD network add on
@@ -248,11 +248,10 @@ curl https://docs.projectcalico.org/manifests/calico.yaml -O
 #### Find CALICO_IPV4POOL_CIDR variable in yaml file and replace value with subnet used during kubeadm init command
 ```
 vi calico.yaml
-	
-#	- find name: CALICO_IPV4POOL_CIDR and update its value attribute to #192.168.200.0/23
-#		- name: CALICO_IPV4POOL_CIDR
-#		  value: 192.168.200.0/23
 ```
+- find name: CALICO_IPV4POOL_CIDR and update its value attribute to #192.168.200.0/23
+  - name: CALICO_IPV4POOL_CIDR
+  - value: 192.168.200.0/23
 
 #### Install Calico in cluster
 ```
