@@ -236,9 +236,10 @@ sudo kubeadm init --apiserver-advertise-address=192.168.1.1 --pod-network-cidr=1
 vi /etc/NetworkManager/conf.d/calico.conf
 ```
 - add below definition in calico.conf
+```
 [keyfile]
 unmanaged-devices=interface-name:cali*;interface-name:tunl*;interface-name:vxlan.calico
-
+```
 #### Download Calico YAML file
 ```
 curl https://docs.projectcalico.org/manifests/calico.yaml -O
