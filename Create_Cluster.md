@@ -287,6 +287,25 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 ```
 #kubeadm join <control-plane-host>:<control-plane-port> --token <token> --discovery-token-ca-cert-hash sha256:<hash>
 ```
+## In case kubeadm output is not available then follow below procedure for adding Worker node
+#### Check API server address on Master node
+```
+kubectl cluster-info
+```
+- Determine API server address from output
+#### Generate token on Master node (run command on master node, check if any token is already available using list command if so same can be used)
+```
+sudo kubeadm token create
+```
+#### Generate Discovery token CA hash on Master node
+```
+openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+```
+#### run kubeadm join with above token and CA hash on WORKER node
+```
+kubeadm join $apiServerAddress:6443 --token $tokenAsGeneratedAbove --discovery-token-ca-cert-hash sha256:$hashAsGeneratedAbove
+```
+
 #### Verify cluster state
 ```
 kubectl get nodes
@@ -313,6 +332,5 @@ sudo usermod -aG sudo $username
 
 ### Add to Login Screen
 ```
-gksudo gedit /etc/gdm/custom.conf
+
 ```
-- Under Greeter, find Include= and add newly added username to this line. Ex: Include=user1,user2
