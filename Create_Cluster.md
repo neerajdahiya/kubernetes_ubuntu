@@ -291,3 +291,28 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 ```
 kubectl get nodes
 ```
+
+## Setting up new node (using clone procedure)
+### Update /etc/hostname
+```
+sudo vi /etc/hostname
+```
+- Update hostname as per desired role of new node
+
+### Update /etc/hosts
+```
+sudo vi /etc/hosts
+```
+- Locate old hostname, it looks like **127.0.1.1 your-old-hostname** and update the hostname as per node use case
+
+### Create a new user with sudo privileges
+```
+sudo adduser $username
+sudo usermod -aG sudo $username
+```
+
+### Add to Login Screen
+```
+gksudo gedit /etc/gdm/custom.conf
+```
+- Under Greeter, find Include= and add newly added username to this line. Ex: Include=user1,user2
