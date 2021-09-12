@@ -275,6 +275,11 @@ kubectl get pods --all-namespaces
 - check all pods are in running status (one coredns instance may remain pending in case only 1 CPU is assigned to VM, can be verified using kubectl describe pod command)
 - worker are yet to be added so output will show master node.
 
+#### Remove taint from master node in case creating single node cluster
+```
+kubectl taint nodes --all node-role.kubernetes.io/master-
+```
+
 ## Joining a cluster with kubeadm (Only Worker Node procedure)
 ### Add Worker Nodes
 - Execute the command shown in kubeadm init output on each worker node as root
