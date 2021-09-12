@@ -211,7 +211,7 @@ sudo systemctl restart docker
 
 ### Initializing control-plane node
 
-#####kubeadm init args
+##### kubeadm init args
 - api server address to be used as IP assigned to master node
 ```
 sudo kubeadm init --apiserver-advertise-address=192.168.1.1 --pod-network-cidr=192.168.200.0/23 --ignore-preflight-errors=NumCPU
@@ -226,14 +226,13 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-### Install POD network add on
+### Install POD network add on (Optional for Kubeadm)
 - Calico is being used as network provider.
-- **Execute Calico procedures as non-root user without sudo**
 
-#### Configure NetworkManager 
+#### Configure NetworkManager (had to configure with bridged networking)
 - Before using Calico networking (In my case there was failure in calico kubectl apply before these changes, using bridged networking for VMs in my cluster setup)
 ```
-vi /etc/NetworkManager/conf.d/calico.conf
+sudo vi /etc/NetworkManager/conf.d/calico.conf
 ```
 - add below definition in calico.conf
 ```
@@ -241,11 +240,14 @@ vi /etc/NetworkManager/conf.d/calico.conf
 unmanaged-devices=interface-name:cali*;interface-name:tunl*;interface-name:vxlan.calico
 ```
 #### Download Calico YAML file
+- **Execute as non-root user without sudo**
 ```
 curl https://docs.projectcalico.org/manifests/calico.yaml -O
 ```
 
 #### Find CALICO_IPV4POOL_CIDR variable in yaml file and replace value with subnet used during kubeadm init command
+- If you are using pod CIDR 192.168.0.0/16, skip to the next step. If you are using a different pod CIDR with kubeadm, no changes are required - Calico will automatically detect the CIDR based on the running configuration. For other platforms, make sure you uncomment the CALICO_IPV4POOL_CIDR variable in the manifest and set it to the same value as your chosen pod CIDR.
+- Execute as non-root user without sudo as file is downloaded to user local (current by default) directory
 ```
 vi calico.yaml
 ```
@@ -253,7 +255,7 @@ vi calico.yaml
   - name: CALICO_IPV4POOL_CIDR
   - value: 192.168.200.0/23
 
-#### Install Calico in cluster
+#### Install Calico in cluster  (as non-root user)
 ```
 kubectl apply -f calico.yaml
 ```
