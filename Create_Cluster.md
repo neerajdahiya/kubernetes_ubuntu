@@ -226,10 +226,10 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-### Install POD network add on (Optional for Kubeadm)
+### Install POD network add-on
 - Calico is being used as network provider.
 
-#### Configure NetworkManager (had to configure with bridged networking)
+#### Configure NetworkManager (should be configured if using bridged networking)
 - Before using Calico networking (In my case there was failure in calico kubectl apply before these changes, using bridged networking for VMs in my cluster setup)
 ```
 sudo vi /etc/NetworkManager/conf.d/calico.conf
@@ -251,7 +251,7 @@ curl https://docs.projectcalico.org/manifests/calico.yaml -O
 ```
 vi calico.yaml
 ```
-- find name: CALICO_IPV4POOL_CIDR and update its value attribute to #192.168.200.0/23
+- find name: CALICO_IPV4POOL_CIDR and update its value attribute to POD CIDR specified during **kubeadm init**
   - name: CALICO_IPV4POOL_CIDR
   - value: 192.168.200.0/23
 
@@ -264,6 +264,15 @@ kubectl apply -f calico.yaml
 ```
 kubectl get nodes
 ```
+- check if master is in Ready state
+- worker are yet to be added so output will show master node.
+
+
+#### Verify cluster default pods
+```
+kubectl get pods --all-namespaces
+```
+- check all pods are in running status (one coredns instance may remain pending in case only 1 CPU is assigned to VM, can be verified using kubectl describe pod command)
 - worker are yet to be added so output will show master node.
 
 ## Joining a cluster with kubeadm (Only Worker Node procedure)
