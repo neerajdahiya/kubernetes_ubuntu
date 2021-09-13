@@ -34,7 +34,7 @@ sudo apt install openssh-server
 
 ### Enable Password Authentication
 ```
-vi sshd_config
+sudo vi /etc/ssh/sshd_config
 ```
 - uncomment PasswordAuthentication yes
 
